@@ -1,0 +1,63 @@
+{
+  "name": "hb-mashup-studio",
+  "productName": "HB Mashup Studio",
+  "version": "1.0.0",
+  "description": "Easy mashup and performance-mix maker by HB Software",
+  "author": "HB Software",
+  "homepage": "https://hbcs.info",
+  "main": "main.js",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "node scripts/vendor.js",
+    "start": "electron .",
+    "test": "node test/engine.test.js",
+    "dist:win": "electron-builder --win nsis",
+    "dist:mac": "electron-builder --mac dmg",
+    "dist:linux": "electron-builder --linux AppImage"
+  },
+  "build": {
+    "appId": "info.hbcs.mashupstudio",
+    "productName": "HB Mashup Studio",
+    "copyright": "Copyright \u00a9 2026 HB Software",
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/logo.png",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "HB Mashup Studio",
+      "artifactName": "HB-Mashup-Studio-Setup-${version}.${ext}"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "src/assets/logo.png",
+      "category": "public.app-category.music",
+      "artifactName": "HB-Mashup-Studio-${version}.${ext}"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "src/assets/logo.png",
+      "category": "Audio"
+    },
+    "icon": "src/assets/logo.png"
+  },
+  "dependencies": {
+    "lamejs": "^1.2.1"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12"
+  }
+}

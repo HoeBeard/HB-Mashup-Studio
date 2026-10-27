@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; worker-src 'self'; manifest-src 'self'" />
+  <title>HB Mashup Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#140b18" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Mashup Studio" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="https://hbcs.info" target="_blank" title="HB Software — hbcs.info">
+      <img src="assets/logo.png" alt="HB Software" class="brand-logo" />
+      <div class="brand-text"><span class="brand-name">Mashup Studio</span><span class="brand-by">by HB Software</span></div>
+    </a>
+
+    <div class="transport">
+      <button id="btnToStart" class="t-btn" title="Jump back to the beginning (Home key)"><span class="ico">⏮</span><span class="lbl">Start</span></button>
+      <button id="btnPlay" class="play-btn" title="Play or pause the mix (Space bar)"><span id="playIcon">▶</span></button>
+      <button id="btnStop" class="t-btn" title="Stop and go back to the start"><span class="ico">■</span><span class="lbl">Stop</span></button>
+      <div class="clock" title="Where you are / how long the whole mix is"><span id="timeNow">0:00.0</span><span class="clock-sep">/</span><span id="timeTotal">0:00.0</span><span class="clock-lbl">time / total length</span></div>
+    </div>
+
+    <div class="file-actions">
+      <button id="btnNew" class="ghost-btn" title="Clear everything and start a new mix">New</button>
+      <button id="btnOpen" class="ghost-btn" title="Open a mix you saved before (Ctrl+O)">Open</button>
+      <button id="btnSave" class="ghost-btn" title="Save this mix so you can keep working on it later (Ctrl+S)">Save</button>
+      <button id="btnExport" class="primary-btn" title="Make the finished MP3 or WAV song file (Ctrl+E)">Export Mix</button>
+    </div>
+  </header>
+
+  <nav class="toolbar">
+    <div class="tool-group phone-only">
+      <button id="btnNewM" class="tool-btn" title="Clear everything and start a new mix"><span class="ico">📄</span> New</button>
+      <button id="btnOpenM" class="tool-btn" title="Open a mix you saved before"><span class="ico">📂</span> Open</button>
+      <button id="btnSaveM" class="tool-btn" title="Save this mix to keep working later"><span class="ico">💾</span> Save</button>
+    </div>
+    <div class="tool-group">
+      <button id="btnAdd" class="primary-btn add-btn" title="Pick songs from your computer or phone">＋ Add Songs</button>
+      <input id="fileInput" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac,.ogg" multiple hidden />
+      <input id="projectInput" type="file" accept=".hbmix" hidden />
+    </div>
+    <div class="tool-group">
+      <button id="btnSplit" class="tool-btn" title="Cut a clip in two where the gold line is (S key)"><span class="ico">✂</span> Split</button>
+      <button id="btnDuplicate" class="tool-btn" title="Make a copy of the clip you picked (Ctrl+D)"><span class="ico">⧉</span> Copy Clip</button>
+      <button id="btnDelete" class="tool-btn" title="Remove the clip you picked (Delete key)"><span class="ico">🗑</span> Delete Clip</button>
+    </div>
+    <div class="tool-group">
+      <button id="btnEven" class="gold-btn" title="Make the volume even — every song the same, or smooth a whole old mix"><span class="ico">⚖</span> Even Out Volume</button>
+    </div>
+    <div class="tool-group">
+      <button id="btnCutRange" class="tool-btn" title="Remove the highlighted part of the mix and close the gap"><span class="ico">✂</span> Cut Section</button>
+      <button id="btnKeepRange" class="tool-btn" title="Throw away everything except the highlighted part"><span class="ico">★</span> Keep Section</button>
+      <button id="btnGap" class="tool-btn" title="Add a few seconds of silence where the gold line is"><span class="ico">⏸</span> Add Pause</button>
+    </div>
+    <div class="tool-group">
+      <button id="btnUndo" class="tool-btn" title="Take back your last change (Ctrl+Z)"><span class="ico">↶</span> Undo</button>
+      <button id="btnRedo" class="tool-btn" title="Bring back a change you undid (Ctrl+Y)"><span class="ico">↷</span> Redo</button>
+    </div>
+    <div class="tool-group right">
+      <label class="toggle" title="When on, clips line up neatly with each other and the gold line as you drag"><input id="snapToggle" type="checkbox" checked /> <span>Snap clips</span></label>
+      <div class="zoom-box" title="Make the timeline bigger or smaller (Ctrl + scroll, or pinch on phones)">
+        <span class="zoom-lbl">Zoom</span>
+        <button id="btnZoomOut" class="zoom-btn" aria-label="Zoom out">−</button>
+        <button id="btnZoomFit" class="zoom-btn wide" title="Show the whole mix on screen">Fit</button>
+        <button id="btnZoomIn" class="zoom-btn" aria-label="Zoom in">＋</button>
+      </div>
+      <button id="btnHelp" class="tool-btn help-btn" title="What every button does"><span class="ico">?</span> Help</button>
+    </div>
+  </nav>
+
+  <main class="workspace">
+    <section id="scroller" class="scroller">
+      <div id="content" class="content">
+        <div class="row ruler-row">
+          <div class="corner">
+            <button id="btnAddTrack" class="tiny-btn" title="Add an empty row to put clips on">＋ Add Track</button>
+          </div>
+          <div id="ruler" class="ruler"></div>
+        </div>
+        <div id="tracks"></div>
+        <div id="rangeLayer" class="range-layer" hidden></div>
+        <div id="playhead" class="playhead"><div class="playhead-cap"></div></div>
+      </div>
+      <div id="emptyState" class="empty-state">
+        <div class="empty-card">
+          <div class="empty-sparkle">✦</div>
+          <h2>Let's make a mix, darling</h2>
+          <p>Drag your songs right here, or click below.</p>
+          <button id="btnAddEmpty" class="primary-btn big">＋ Add Songs</button>
+          <div><button id="btnHelpEmpty" class="link-btn">What do all the buttons do?</button></div>
+          <ol class="steps">
+            <li><b>Add songs.</b> Each one lands on its own row, lined up one after another.</li>
+            <li><b>Trim &amp; cut.</b> Drag a clip's edges to trim. Press <kbd>S</kbd> to split at the playhead.</li>
+            <li><b>Even out volume.</b> One click makes every song — or an old mix — the same volume.</li>
+            <li><b>Export.</b> Get an MP3 or WAV for your performance.</li>
+          </ol>
+        </div>
+      </div>
+      <div id="dropHint" class="drop-hint" hidden><div>Drop songs to add them ✦</div></div>
+    </section>
+
+    <aside id="inspector" class="inspector"></aside>
+  </main>
+
+  <footer class="statusbar">
+    <div class="master">
+      <span class="label">Main volume</span>
+      <input id="masterVol" type="range" min="0" max="1.5" step="0.01" value="1" />
+      <span id="masterVal" class="val">100%</span>
+      <div class="meter"><div id="meterL" class="meter-bar"></div><div id="meterR" class="meter-bar"></div></div>
+    </div>
+    <label class="toggle" title="Keep this on — it stops the mix from crackling when it gets loud"><input id="limiterToggle" type="checkbox" checked /> <span>Protect from distortion</span></label>
+    <label class="select-wrap" title="How loud the Even Out Volume button makes everything">Even Out level
+      <select id="targetSelect">
+        <option value="-11">Loud (club)</option>
+        <option value="-14" selected>Standard</option>
+        <option value="-17">Softer</option>
+      </select>
+    </label>
+    <div id="status" class="status">Ready</div>
+    <a class="footer-brand" href="https://hbcs.info" target="_blank">HB Software · hbcs.info</a>
+  </footer>
+
+  <div id="modal" class="modal" hidden><div class="modal-card" id="modalCard"></div></div>
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="engine.js"></script>
+  <script src="vendor/lame.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

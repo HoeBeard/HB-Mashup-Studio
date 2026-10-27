@@ -1,0 +1,15 @@
+{
+  "name": "HB Mashup Studio",
+  "short_name": "Mashup Studio",
+  "description": "Easy mashups and performance mixes — by HB Software",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#140b18",
+  "theme_color": "#140b18",
+  "icons": [
+    { "src": "assets/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
