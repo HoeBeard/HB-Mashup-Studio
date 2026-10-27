@@ -4,7 +4,7 @@
   const E = window.Engine;
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const COLORS = ['#ff2e93', '#9b5cff', '#38e1ff', '#ffc94a', '#4cf0a0', '#ff8a3d', '#ff5ad8', '#6c8cff'];
+  const COLORS = ['#1e6bff', '#3fe0ff', '#9b5cff', '#ffc94a', '#4cf0a0', '#ff8a3d', '#ff5ad8', '#6c8cff'];
   const isTouch = matchMedia('(pointer: coarse)').matches;
   const css = getComputedStyle(document.documentElement);
   const HEADER_W = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-w')) || 230;
@@ -402,7 +402,7 @@
     const H = Math.max(10, LANE_H() - 32);
     cv.width = Math.ceil((x1 - x0) * dpr); cv.height = Math.ceil(H * dpr);
     const g = cv.getContext('2d'); g.scale(dpr, dpr);
-    g.fillStyle = sources.get(c.sourceId)?.color || '#ff2e93';
+    g.fillStyle = sources.get(c.sourceId)?.color || '#1e6bff';
     const gain = E.dbToGain(c.gainDb || 0), r = E.rateOf(c);
     const curve = c.levelKey ? S.levels[c.levelKey] : null;
     const mid = H / 2;

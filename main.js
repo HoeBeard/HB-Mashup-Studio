@@ -12,7 +12,7 @@ function createWindow() {
     minWidth: 1000,
     minHeight: 640,
     title: 'HB Mashup Studio',
-    backgroundColor: '#140b18',
+    backgroundColor: '#030a1a',
     icon: path.join(__dirname, 'src', 'assets', 'logo.png'),
     autoHideMenuBar: true,
     webPreferences: {
