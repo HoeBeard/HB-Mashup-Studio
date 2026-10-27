@@ -76,24 +76,26 @@ If a button can't do anything yet (for example Delete Clip before a clip is pick
 
 ## For performers: how to get it
 
+Nothing else to install — everything the app needs comes inside it.
+
 | Device | How |
 |---|---|
-| **Windows** | Download `HB-Mashup-Studio-Setup.exe` from the **Releases** page and run it. If Windows shows "Windows protected your PC", click **More info → Run anyway**. |
-| **Mac** | Download the `.dmg` from **Releases**, drag the app to Applications. The first time, **right-click the app → Open**. |
-| **iPhone / iPad** | Open the app link in **Safari** → tap **Share** → **Add to Home Screen**. |
-| **Android** | Open the app link in **Chrome** → tap **⋮** → **Install app** (or *Add to Home screen*). |
+| **Windows 10 / 11** | [Download for Windows](https://github.com/HoeBeard/HB-Mashup-Studio/releases/latest/download/HB-Mashup-Studio-Setup.exe), then double-click it. It installs and opens by itself, and puts a shortcut on your desktop. If Windows shows "Windows protected your PC", click **More info → Run anyway**. |
+| **Mac** (macOS 12 or newer) | [Download for Mac](https://github.com/HoeBeard/HB-Mashup-Studio/releases/latest/download/HB-Mashup-Studio-Mac.dmg), open it and drag the app into **Applications**. The first time you open it, macOS may say it can't check the app: open **System Settings → Privacy & Security**, scroll down and click **Open Anyway**. |
+| **iPhone / iPad** | Open [the app link](https://hoebeard.github.io/HB-Mashup-Studio/) in **Safari** → tap **Share** → **Add to Home Screen**. |
+| **Android** | Open [the app link](https://hoebeard.github.io/HB-Mashup-Studio/) in **Chrome** → tap **⋮** → **Install app** (or *Add to Home screen*). |
 
+The Windows installer checks the computer first and explains clearly if it's too old (it needs 64-bit Windows 10 or 11).
 On phones, exported mixes open the share sheet so you can save to Files, Google Drive, AirDrop or send in a message.
 
 ---
 
 ## For the owner: publishing it (one-time, ~10 minutes)
 
-1. Create a new repository on GitHub (e.g. `HB-Mashup-Studio`) and upload everything in this folder.
-2. **Phone app link:** repo **Settings → Pages → Source: GitHub Actions**. Every push publishes it to
-   `https://<your-github-name>.github.io/HB-Mashup-Studio/`
-3. **Installers:** open the **Actions** tab → **Build installers** → **Run workflow**. When it finishes, the `.exe` and `.dmg` are under that run's *Artifacts*.
-   To put them on a public download page, create a tag/release named `v1.0.0` — the installers attach to the Release automatically.
+1. **Phone app link:** repo **Settings → Pages → Source: GitHub Actions**. Every push to `main` publishes it to
+   `https://hoebeard.github.io/HB-Mashup-Studio/`
+2. **Installers:** every push to `main` builds the Windows and Mac installers and puts them on the **Releases** page automatically.
+   The download links above always point to the newest one. Raise `version` in `package.json` to start a new release instead of updating the current one.
 
 ### Changing the logo
 Replace **`src/assets/logo.png`** with your logo (square PNG, at least 512×512). That one file is used for the app header, desktop icon, installer and phone home-screen icon. Push the change and the builds update.
@@ -104,6 +106,7 @@ Requires [Node.js](https://nodejs.org) (only for you as the developer — users 
 npm install
 npm start          # open the app
 npm test           # check the audio engine
+npm run check      # make sure everything the installer needs is there
 npm run dist:win   # build the Windows installer into dist/
 ```
 

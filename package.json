@@ -13,12 +13,13 @@
     "test": "node test/engine.test.js",
     "dist:win": "electron-builder --win nsis",
     "dist:mac": "electron-builder --mac dmg",
-    "dist:linux": "electron-builder --linux AppImage"
+    "dist:linux": "electron-builder --linux AppImage",
+    "check": "node scripts/check.js"
   },
   "build": {
     "appId": "info.hbcs.mashupstudio",
     "productName": "HB Mashup Studio",
-    "copyright": "Copyright \u00a9 2026 HB Software",
+    "copyright": "Copyright © 2026 HB Software",
     "files": [
       "main.js",
       "preload.js",
@@ -28,30 +29,60 @@
       "output": "dist"
     },
     "win": {
-      "target": "nsis",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "src/assets/logo.png",
       "signAndEditExecutable": false
     },
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
       "shortcutName": "HB Mashup Studio",
-      "artifactName": "HB-Mashup-Studio-Setup-${version}.${ext}"
+      "deleteAppDataOnUninstall": false,
+      "include": "build/installer.nsh",
+      "artifactName": "HB-Mashup-Studio-Setup.${ext}"
     },
     "mac": {
       "target": "dmg",
       "icon": "src/assets/logo.png",
       "category": "public.app-category.music",
-      "artifactName": "HB-Mashup-Studio-${version}.${ext}"
+      "artifactName": "HB-Mashup-Studio-Mac.${ext}",
+      "minimumSystemVersion": "12.0"
     },
     "linux": {
       "target": "AppImage",
       "icon": "src/assets/logo.png",
       "category": "Audio"
     },
-    "icon": "src/assets/logo.png"
+    "icon": "src/assets/logo.png",
+    "dmg": {
+      "title": "HB Mashup Studio",
+      "contents": [
+        {
+          "x": 150,
+          "y": 190
+        },
+        {
+          "x": 390,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "width": 540,
+        "height": 380
+      }
+    }
   },
   "dependencies": {
     "lamejs": "^1.2.1"

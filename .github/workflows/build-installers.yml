@@ -1,13 +1,19 @@
-# Builds the free HB Mashup Studio installers for Windows and Mac.
-# Run it from the "Actions" tab (Run workflow), or push a tag like v1.0.0
-# to publish them on a GitHub Release page anyone can download from.
+# Builds the free HB Mashup Studio installers for Windows and Mac and puts them
+# on the Releases page every time main changes. The download links never change:
+#   https://github.com/<owner>/<repo>/releases/latest/download/HB-Mashup-Studio-Setup.exe
+#   https://github.com/<owner>/<repo>/releases/latest/download/HB-Mashup-Studio-Mac.dmg
+# You can also run it by hand from the "Actions" tab (Run workflow).
 name: Build installers
 on:
   workflow_dispatch:
   push:
+    branches: [main]
     tags: ['v*']
 permissions:
   contents: write
+concurrency:
+  group: installers-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     strategy:
@@ -19,10 +25,11 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: npm install
+      - run: npm run check
       - run: npm test
       - name: Build Windows installer
         if: runner.os == 'Windows'
-        run: npx electron-builder --win nsis --publish never
+        run: npx electron-builder --win --publish never
       - name: Build Mac app
         if: runner.os == 'macOS'
         run: npx electron-builder --mac dmg --universal --publish never
@@ -33,10 +40,27 @@ jobs:
           path: |
             dist/*.exe
             dist/*.dmg
-      - name: Attach to release
-        if: startsWith(github.ref, 'refs/tags/')
+
+  release:
+    needs: build
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: ver
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        with: { path: dist, merge-multiple: true }
+      - name: Put the installers on the Releases page
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: HB Mashup Studio ${{ steps.ver.outputs.version }}
+          make_latest: 'true'
+          body: |
+            **Windows:** download `HB-Mashup-Studio-Setup.exe` and double-click it. It installs and opens by itself.
+            **Mac:** download `HB-Mashup-Studio-Mac.dmg`, open it and drag the app into Applications.
+            **iPhone / Android:** open https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ and add it to your home screen.
           files: |
             dist/*.exe
             dist/*.dmg
